@@ -1,0 +1,219 @@
+<!-- src/main/resources/META-INF/resources/products.xhtml -->
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Product Management</title>
+</h:head>
+
+<h:body>
+    <h:form id="form">
+        <p:growl id="messages" showDetail="true"/>
+        
+        <p:dataTable id="products" var="product" value="#{productBean.products}" editable="true">
+            <p:ajax event="rowEdit" listener="#{productBean.onRowEdit}" update=":form:messages"/>
+            <p:ajax event="rowEditCancel" listener="#{productBean.onRowCancel}" update=":form:messages"/>
+            
+            <p:column headerText="ID">
+                <h:outputText value="#{product.id}" />
+            </p:column>
+            
+            <p:column headerText="Name">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{product.name}" />
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputText value="#{product.name}" style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            
+            <p:column headerText="Price">
+                <p:cellEditor>
+                    <f:facet name="output">
+                        <h:outputText value="#{product.price}" />
+                    </f:facet>
+                    <f:facet name="input">
+                        <p:inputNumber value="#{product.price}" style="width:100%"/>
+                    </f:facet>
+                </p:cellEditor>
+            </p:column>
+            
+            <p:column style="width:6rem">
+                <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row"/>
+            </p:column>
+        </p:dataTable>
+    </h:form>
+</h:body>
+</html>
+<!-- <!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Product List</title>
+</h:head>
+
+<h:body>
+    <div class="card">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+
+            <p:dataTable id="products" var="product" value="#{productBean.products}" style="margin-bottom:20px">
+                <f:facet name="header">
+                    Products
+                </f:facet>
+
+                <p:column headerText="ID">
+                    <h:outputText value="#{product.id}" />
+                </p:column>
+
+                <p:column headerText="Name">
+                    <h:outputText value="#{product.name}" />
+                </p:column>
+
+                <p:column headerText="Price">
+                    <h:outputText value="#{product.price}" />
+                </p:column>
+
+                <p:column headerText="Description">
+                    <h:outputText value="#{product.description}" />
+                </p:column>
+
+                <p:column style="width:8rem">
+                    <p:button icon="pi pi-pencil" styleClass="rounded-button ui-button-warning mr-2"
+                        outcome="/edit-product">
+                        <f:param name="id" value="#{product.id}" />
+                    </p:button>
+
+                    <p:commandButton icon="pi pi-trash" styleClass="rounded-button ui-button-danger" process="@this"
+                        action="#{productBean.deleteProduct(product.id)}" update=":form:messages :form:products">
+                        <p:confirm header="Confirmation" message="Are you sure you want to delete this product?"
+                            icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:column>
+            </p:dataTable>
+
+            <p:button value="Add New Product" outcome="/create-product" styleClass="ui-button-success" />
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary"
+                    icon="pi pi-times" />
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes ui-button-danger"
+                    icon="pi pi-check" />
+            </p:confirmDialog>
+        </h:form>
+    </div>
+</h:body>
+
+</html> -->
+
+
+
+
+
+
+<!-- <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core" xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+    <title>Product Management</title>
+</h:head>
+
+<h:body>
+    <div class="card">
+        <h:form id="form">
+            <p:growl id="messages" showDetail="true" />
+
+            <p:dataTable id="products" var="product" value="#{productBean.products}" editable="true"
+                style="margin-bottom:20px">
+                <f:facet name="header">
+                    Products
+                </f:facet>
+
+                <p:column headerText="ID">
+                    <h:outputText value="#{product.id}" />
+                </p:column>
+
+                <p:column headerText="Name">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{product.name}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputText value="#{product.name}" style="width:100%" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Price">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{product.price}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputNumber value="#{product.price}" style="width:100%" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column headerText="Description">
+                    <p:cellEditor>
+                        <f:facet name="output">
+                            <h:outputText value="#{product.description}" />
+                        </f:facet>
+                        <f:facet name="input">
+                            <p:inputTextarea value="#{product.description}" style="width:100%" />
+                        </f:facet>
+                    </p:cellEditor>
+                </p:column>
+
+                <p:column style="width:6rem">
+                    <p:rowEditor editTitle="Edit Row" cancelTitle="Cancel Edit" saveTitle="Save Row" />
+
+                    <p:commandButton icon="pi pi-trash" styleClass="rounded-button ui-button-danger ms-2"
+                        process="@this" action="#{productBean.deleteProduct(product.id)}"
+                        update=":form:messages :form:products">
+                        <p:confirm header="Confirmation" message="Are you sure you want to delete this product?"
+                            icon="pi pi-exclamation-triangle" />
+                    </p:commandButton>
+                </p:column>
+                <p:ajax event="rowEdit" listener="#{productBean.onRowEdit}" update=":form:messages :form:products" />
+                <p:ajax event="rowEditCancel" listener="#{productBean.onRowEditCancel}" update=":form:messages" />
+                <p:ajax event="rowEditInit" listener="#{productBean.onRowEditInit}" />
+                <p:rowEditor />
+            </p:dataTable>
+
+            <p:panel header="Add New Product">
+                <h:panelGrid columns="2" cellpadding="5">
+                    <p:outputLabel for="name" value="Name:" />
+                    <p:inputText id="name" value="#{productBean.newProduct.name}" required="true" />
+
+                    <p:outputLabel for="price" value="Price:" />
+                    <p:inputNumber id="price" value="#{productBean.newProduct.price}" required="true" minValue="0"
+                        decimalPlaces="2" />
+
+                    <p:outputLabel for="description" value="Description:" />
+                    <p:inputTextarea id="description" value="#{productBean.newProduct.description}" required="true" />
+                </h:panelGrid>
+
+                <p:commandButton value="Add Product" action="#{productBean.saveProduct}"
+                    update=":form:messages :form:products" style="margin-top: 10px" />
+            </p:panel>
+
+            <p:confirmDialog global="true" showEffect="fade" hideEffect="fade" responsive="true" width="350">
+                <p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no ui-button-secondary" icon="pi pi-times"/>
+                <p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes ui-button-danger" icon="pi pi-check"/>
+            </p:confirmDialog>
+        </h:form>
+    </div>
+</h:body>
+
+</html> -->
