@@ -2,6 +2,9 @@ package com.example.productmanagementfrontend.model;
 
 import java.math.BigDecimal;
 
+import lombok.Data;
+
+@Data
 public class Product implements Cloneable{
     private Long id;
     private String name;
@@ -21,36 +24,12 @@ public class Product implements Cloneable{
             return clone;
         }
     }
-    // Getters and Setters
-    public Long getId() {
-        return id;
+
+    public void setName(String name){
+        this.name = name.trim();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
+    public void setDescription(String description){
+        this.description = description.trim();
     }
 }
