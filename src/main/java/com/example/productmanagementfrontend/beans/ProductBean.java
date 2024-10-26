@@ -10,21 +10,22 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.PostConstruct;
 import jakarta.faces.application.FacesMessage;
 import jakarta.faces.context.FacesContext;
+import jakarta.faces.view.ViewScoped;
 import lombok.Getter;
 import lombok.Setter;
 
 import org.primefaces.event.RowEditEvent;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-@Component("productBean")
-@Scope(value = "session", proxyMode = ScopedProxyMode.TARGET_CLASS)
+@Component
+@ViewScoped
 @Getter
 @Setter
 public class ProductBean implements Serializable {
@@ -35,6 +36,7 @@ public class ProductBean implements Serializable {
     private Product newProduct;
     private Product productBeforeEdit;
 
+    @Autowired
     public ProductBean(ProductService productService) {
         this.productService = productService;
         this.newProduct = new Product();
@@ -45,32 +47,17 @@ public class ProductBean implements Serializable {
         loadProducts();
     }
 
-    public String goToEdit(Product product) {
-        this.selectedProduct = new Product();
-        // Copy values to avoid reference issues
-        this.selectedProduct.setId(product.getId());
-        this.selectedProduct.setName(product.getName());
-        this.selectedProduct.setPrice(product.getPrice());
-        this.selectedProduct.setDescription(product.getDescription());
-        return "edit-product?faces-redirect=true";
-    }
-
-    public String saveProduct() throws JsonMappingException, JsonProcessingException {
+    public void saveProduct() throws JsonMappingException, JsonProcessingException {
         try {
             productService.addProduct(newProduct);
-            // addMessage(FacesMessage.SEVERITY_INFO, "Success", "Product added
-            // successfully");
-            // newProduct = new Product();
+            addMessage(FacesMessage.SEVERITY_INFO, "Success", "Product added successfully");
+            newProduct = new Product();
             loadProducts();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Product added successfully"));
-            return "/products?faces-redirect=true";
         } catch (HttpClientErrorException e) {
             getValidationErrors(e);
         } catch (Exception e) {
             addMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to add product: " + e.getMessage());
         }
-        return null;
     }
 
     private void getValidationErrors(HttpClientErrorException e) throws JsonProcessingException {
@@ -89,31 +76,23 @@ public class ProductBean implements Serializable {
         }
     }
 
-    public String updateProduct(Product product) throws JsonProcessingException {
+    public void updateProduct(Product product) throws JsonProcessingException{
         try {
             productService.updateProduct(product);
-            // addMessage(FacesMessage.SEVERITY_INFO, "Success", "Product updated
-            // successfully");
+            addMessage(FacesMessage.SEVERITY_INFO, "Success", "Product updated successfully");
             loadProducts();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Product added successfully"));
-            return "/products?faces-redirect=true";
         } catch (HttpClientErrorException e) {
             getValidationErrors(e);
         } catch (Exception e) {
             addMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to update product: " + e.getMessage());
         }
-        return null;
     }
 
     public void deleteProduct(Long id) {
         try {
             productService.deleteProduct(id);
-            // addMessage(FacesMessage.SEVERITY_INFO, "Success", "Product deleted
-            // successfully");
+            addMessage(FacesMessage.SEVERITY_INFO, "Success", "Product deleted successfully");
             loadProducts();
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Product deleted successfully"));
         } catch (Exception e) {
             addMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to delete product: " + e.getMessage());
         }
@@ -127,10 +106,7 @@ public class ProductBean implements Serializable {
         try {
             products = productService.getProducts();
         } catch (Exception e) {
-            FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error",
-                            "Failed to load products: " + e.getMessage()));
-            e.printStackTrace(); // Log the exception
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "Failed to load products: " + e.getMessage());
         }
     }
 
@@ -142,10 +118,9 @@ public class ProductBean implements Serializable {
         }
         return -1;
     }
-    
 
     public void onRowEdit(RowEditEvent<Product> event) {
-        Product editedProduct = (Product) event.getObject();
+        Product editedProduct = event.getObject();
         try {
             updateProduct(editedProduct);
         } catch (Exception e) {

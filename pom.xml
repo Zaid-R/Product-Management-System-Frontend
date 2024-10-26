@@ -40,11 +40,11 @@
             <artifactId>jsf-spring-boot-starter</artifactId>
         </dependency>
 
-		<dependency>
+		<!-- <dependency>
 			<groupId>jakarta.faces</groupId>
 			<artifactId>jakarta.faces-api</artifactId>
 			<version>4.0.1</version>
-		</dependency>
+		</dependency> -->
         
         <!-- PrimeFaces Starter -->
         <dependency>
